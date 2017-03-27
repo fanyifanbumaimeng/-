@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>蓝色拼图</title>
+    <link rel="stylesheet" href="css/common.css">
+    <style>
+        body {
+            background-color: #faf8ef;
+        }
+
+        .main {
+            width: 500px;
+            margin: 0 auto;
+        }
+
+        .main_tit {
+            margin-top: 30px;
+        }
+
+        .main_tit h1 {
+            font-size: 70px;
+            font-weight: 900;
+            color: #0099ff;
+            margin-left: 30px;
+        }
+
+        .main_tit p {
+            float: right;
+            font-size: 15px;
+            color: #000;
+        }
+
+        #explain {
+            background-color: #0099ff;
+            color: #ffffff;
+            margin-top: 5px;
+            padding: 4px;
+            border-radius: 8px;
+            font-size: 15px;
+            margin-left: 300px;
+        }
+
+        .main_con {
+            margin-top: 20px;
+        }
+
+        .main_con ul {
+            border: 7px solid #4d4d4d;
+            width: 500px;
+            height: 500px;
+            background-color: #4d4d4d;
+        }
+
+        .main_con ul li {
+            border: 7px solid #4d4d4d;
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            float: left;
+            background-color: #e6ab5e;
+        }
+
+        .main_con ul li.blue {
+            background-color: #0099ff;
+        }
+    </style>
+</head>
+<body>
+<div class="main">
+    <div class="main_tit">
+        <h1>蓝色拼图</h1>
+        <p id="rank">当前级别：<span>1</span></p><br>
+        <p id="click">当前点击次数：<span>0</span></p><br>
+        <a href="#" id="explain">玩法说明</a>
+    </div>
+    <div class="main_con">
+        <ul id="gameBox">
+        </ul>
+    </div>
+</div>
+</body>
+<script src="js/jquery-1.12.2.min.js"></script>
+<script>
+	$(function () {
+		var index = 1;
+		var clickNum = 0;
+		addLi();
+		$("#gameBox").on("click", "li", function () {
+			var num = $(this).index();
+			var num1 = num - index;
+			var num2 = num - 1;
+			var num3 = num + 1;
+			var num4 = num + index;
+			$("#gameBox>li").eq(num).toggleClass("blue");
+			if (num1 >= 0) {
+				$("#gameBox>li").eq(num1).toggleClass("blue");
+			}
+			if (num % index !== 0) {
+				$("#gameBox>li").eq(num2).toggleClass("blue");
+			}
+			if ((num + 1) % index !== 0) {
+				$("#gameBox>li").eq(num3).toggleClass("blue");
+			}
+			if (num4 < index * index) {
+				$("#gameBox>li").eq(num4).toggleClass("blue");
+			}
+			if ($("#gameBox>.blue").length == index * index) {
+				setTimeout(function () {
+					$("#gameBox>li").remove();
+					index++;
+					addLi();
+					$("#rank>span").html(index);
+				}, 500)
+			}
+			clickNum++;
+			$("#click>span").html(clickNum);
+		})
+		$("#explain").click(function () {
+			prompt()
+		})
+
+		function addLi() {
+			for (var i = 1; i <= index * index; i++) {
+				var li = $("<li></li>");
+				li.appendTo("#gameBox");
+			}
+			$("#gameBox>li").css({
+				width: (1 / index) * 500,
+				height: (1 / index) * 500,
+				border: (7 - index / 2) + "px solid #4d4d4d"
+			})
+		}
+
+		function prompt() {
+			alert("如何才算赢：使拼板全部变成蓝色。" +
+				"玩法：每个方块一面橙色，一面蓝色。点击一个方块，" +
+				"这个方块的颜色会翻转，并且，与它邻接的方块的颜色也会翻转。")
+		}
+
+	})
+</script>
+</html>
